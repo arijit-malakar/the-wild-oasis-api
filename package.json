@@ -4,7 +4,8 @@
   "description": "RESTful API for The Wild Oasis Project",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "start:prod": "NODE_ENV=production nodemon index.js"
   },
   "author": "Arijit Malakar",
   "license": "ISC",
