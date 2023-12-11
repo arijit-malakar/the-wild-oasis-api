@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
@@ -7,6 +8,9 @@ const guestRouter = require("./routes/guestRoutes");
 const app = express();
 
 app.use(express.json());
+
+const dirname = path.resolve();
+app.use("/uploads", express.static(path.join(dirname, "/uploads")));
 
 app.use("/api/cabins", cabinRouter);
 app.use("/api/guests", guestRouter);

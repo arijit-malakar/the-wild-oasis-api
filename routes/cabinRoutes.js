@@ -6,11 +6,11 @@ const router = express.Router();
 router
   .route("/")
   .get(cabinController.getAllCabins)
-  .post(cabinController.createCabin);
+  .post(cabinController.uploadImage, cabinController.createCabin);
 router
   .route("/:id")
   .get(cabinController.getCabin)
-  .patch(cabinController.updateCabin)
+  .post(cabinController.uploadImage, cabinController.updateCabin)
   .delete(cabinController.deleteCabin);
 
 module.exports = router;

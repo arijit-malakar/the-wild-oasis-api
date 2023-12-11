@@ -1,6 +1,29 @@
+const multer = require("multer");
 const Cabin = require("../models/cabinModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/cabins");
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split("/")[1];
+    cb(null, `cabin-${Date.now()}.${ext}`);
+  },
+});
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(new AppError("Please upload an image!", 400), false);
+  }
+};
+
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+
+exports.uploadImage = upload.single("image");
 
 exports.getAllCabins = catchAsync(async (req, res, next) => {
   // Filtering
@@ -62,6 +85,10 @@ exports.getCabin = catchAsync(async (req, res, next) => {
 });
 
 exports.createCabin = catchAsync(async (req, res, next) => {
+  if (req.file) {
+    req.body.image = req.file.filename;
+  }
+
   const newCabin = await Cabin.create(req.body);
 
   res.status(201).json({
@@ -71,6 +98,9 @@ exports.createCabin = catchAsync(async (req, res, next) => {
 });
 
 exports.updateCabin = catchAsync(async (req, res, next) => {
+  if (req.file) {
+    req.body.image = req.file.filename;
+  }
   const cabin = await Cabin.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
