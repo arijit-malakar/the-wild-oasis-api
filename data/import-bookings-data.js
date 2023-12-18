@@ -25,7 +25,7 @@ const importData = async () => {
   try {
     const finalBookings = await Promise.all(
       bookings.map(async (booking) => {
-        const cabin = await Cabin.findById(booking.cabinId);
+        const cabin = await Cabin.findById(booking.cabin);
         const numNights = subtractDates(booking.endDate, booking.startDate);
         const cabinPrice = numNights * (cabin.regularPrice - cabin.discount);
         const extrasPrice = booking.hasBreakfast
