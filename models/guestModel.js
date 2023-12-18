@@ -7,7 +7,7 @@ const guestSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: [true, "Please provide guest name"],
+    required: [true, "Please provide guest email"],
     unique: true,
     lowercase: true,
   },
@@ -18,6 +18,9 @@ const guestSchema = new mongoose.Schema({
   nationalID: {
     type: String,
     required: [true, "Please provide ID for the guest's nationality"],
+  },
+  countryFlag: {
+    type: String,
   },
 });
 

@@ -1,34 +1,66 @@
-exports.getAllGuests = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "This route is not yet defined!",
-  });
-};
+const Guest = require("../models/guestModel");
+const AppError = require("../utils/appError");
+const catchAsync = require("../utils/catchAsync");
 
-exports.getGuest = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "This route is not yet defined!",
-  });
-};
+exports.getAllGuests = catchAsync(async (req, res, next) => {
+  const guests = await Guest.find({});
 
-exports.createGuest = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "This route is not yet defined!",
+  res.status(200).json({
+    status: "success",
+    results: guests.length,
+    data: {
+      guests,
+    },
   });
-};
+});
 
-exports.updateGuest = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "This route is not yet defined!",
-  });
-};
+exports.getGuest = catchAsync(async (req, res, next) => {
+  const guest = await Guest.findById(req.params.id);
 
-exports.deleteGuest = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "This route is not yet defined!",
+  if (!guest) {
+    return next(new AppError("No guest found for the ID", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: guest,
   });
-};
+});
+
+exports.createGuest = catchAsync(async (req, res, next) => {
+  const newGuest = await Guest.create(req.body);
+
+  res.status(201).json({
+    status: "success",
+    data: newGuest,
+  });
+});
+
+exports.updateGuest = catchAsync(async (req, res, next) => {
+  const guest = await Guest.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!guest) {
+    return next(new AppError("No guest found for the ID", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: guest,
+  });
+});
+
+exports.deleteGuest = catchAsync(async (req, res, next) => {
+  const guest = await Guest.findByIdAndDelete(req.params.id);
+
+  if (!guest) {
+    return next(new AppError("No guest found for the ID", 404));
+  }
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
