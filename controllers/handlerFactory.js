@@ -8,6 +8,7 @@ exports.getAll = (Model) =>
     const excludedFields = ["page", "sort", "limit", "fields"];
     excludedFields.forEach((el) => delete queryObj[el]);
     let query = Model.find(queryObj);
+    const numDocs = await Model.countDocuments(queryObj);
 
     // Sorting
     if (req.query.sort) {
@@ -31,7 +32,6 @@ exports.getAll = (Model) =>
     const skip = (page - 1) * limit;
     query = query.skip(skip).limit(limit);
     if (req.query.page) {
-      const numDocs = await Model.countDocuments();
       if (skip >= numDocs) throw new Error("This page does not exist");
     }
 
@@ -39,7 +39,7 @@ exports.getAll = (Model) =>
 
     res.status(200).json({
       status: "success",
-      results: docs.length,
+      results: numDocs,
       data: docs,
     });
   });
