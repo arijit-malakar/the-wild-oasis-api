@@ -6,6 +6,7 @@ const cabinRouter = require("./routes/cabinRoutes");
 const guestRouter = require("./routes/guestRoutes");
 const settingsRouter = require("./routes/settingsRoutes");
 const bookingRouter = require("./routes/bookingRoutes");
+const userRouter = require("./routes/userRoutes");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use("/api/cabins", cabinRouter);
 app.use("/api/guests", guestRouter);
 app.use("/api/settings", settingsRouter);
 app.use("/api/bookings", bookingRouter);
+app.use("/api/users", userRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
