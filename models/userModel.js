@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
 });
 
+// Password encryption | Not persisting passwordConfirm in DB
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
@@ -40,6 +41,15 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// Setting `passwordChangedAt` while modifying password
+userSchema.pre("save", function (next) {
+  if (!this.isModified("password") || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
+// Compare password with encrypted password
 userSchema.methods.isCorrectPassword = async function (
   inputPassword,
   userPassword
@@ -47,6 +57,7 @@ userSchema.methods.isCorrectPassword = async function (
   return await bcrypt.compare(inputPassword, userPassword);
 };
 
+// Getting password modification status
 userSchema.methods.isPasswordModified = function (jwtIssuedAt) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
