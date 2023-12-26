@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const cabinRouter = require("./routes/cabinRoutes");
@@ -11,6 +12,7 @@ const userRouter = require("./routes/userRoutes");
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 const dirname = path.resolve();
 app.use("/uploads", express.static(path.join(dirname, "/uploads")));

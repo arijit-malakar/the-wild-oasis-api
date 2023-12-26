@@ -1,29 +1,8 @@
-const multer = require("multer");
 const Cabin = require("../models/cabinModel");
-const AppError = require("../utils/appError");
 const factory = require("./handlerFactory");
+const { imageUploader } = require("../utils/imageUploader");
 
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/cabins");
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split("/")[1];
-    cb(null, `cabin-${Date.now()}.${ext}`);
-  },
-});
-
-const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image")) {
-    cb(null, true);
-  } else {
-    cb(new AppError("Please upload an image!", 400), false);
-  }
-};
-
-const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
-
-exports.uploadImage = upload.single("image");
+exports.uploadImage = imageUploader("cabin", "image");
 
 exports.setUploadedImage = (req, res, next) => {
   if (req.file) {

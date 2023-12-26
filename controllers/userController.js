@@ -2,6 +2,7 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const User = require("../models/userModel");
 const factory = require("./handlerFactory");
+const { imageUploader } = require("../utils/imageUploader");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -10,6 +11,8 @@ const filterObj = (obj, ...allowedFields) => {
   });
   return newObj;
 };
+
+exports.uploadImage = imageUploader("user", "photo");
 
 exports.getUserId = (req, res, next) => {
   req.params.id = req.user._id;
@@ -25,6 +28,9 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     );
 
   const filteredBody = filterObj(req.body, "fullName");
+  if (req.file) {
+    filteredBody.photo = req.file.filename;
+  }
 
   const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
     new: true,
