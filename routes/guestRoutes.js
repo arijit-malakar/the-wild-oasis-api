@@ -1,8 +1,10 @@
 const express = require("express");
-const guestController = require("../controllers/guestController");
 const authController = require("../controllers/authController");
+const guestController = require("../controllers/guestController");
 
 const router = express.Router();
+
+router.use(authController.protect);
 
 router
   .route("/")

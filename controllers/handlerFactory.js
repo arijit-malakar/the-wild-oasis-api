@@ -1,7 +1,7 @@
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
-exports.getAll = (Model) =>
+exports.getAll = (Model, populateOptions) =>
   catchAsync(async (req, res, next) => {
     // Filtering
     const queryObj = { ...req.query };
@@ -34,6 +34,8 @@ exports.getAll = (Model) =>
     if (req.query.page) {
       if (skip >= numDocs) throw new Error("This page does not exist");
     }
+
+    if (populateOptions) query = query.populate(populateOptions);
 
     const docs = await query;
 
@@ -98,5 +100,3 @@ exports.deleteOne = (Model) =>
       data: null,
     });
   });
-
-// API Features - getAll

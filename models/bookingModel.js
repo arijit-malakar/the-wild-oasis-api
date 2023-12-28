@@ -73,10 +73,11 @@ bookingSchema.pre("find", function (next) {
   this.populate({
     path: "cabin",
     select: "name",
-  }).populate({
-    path: "guest",
-    select: "fullName email",
   });
+  // .populate({
+  //   path: "guest",
+  //   select: "fullName email",
+  // });
   next();
 });
 

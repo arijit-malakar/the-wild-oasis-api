@@ -1,7 +1,10 @@
 const express = require("express");
+const authController = require("../controllers/authController");
 const cabinController = require("../controllers/cabinController");
 
 const router = express.Router();
+
+router.use(authController.protect);
 
 router
   .route("/")

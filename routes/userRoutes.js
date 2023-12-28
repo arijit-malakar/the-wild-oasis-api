@@ -8,22 +8,14 @@ router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 router.get("/logout", authController.logout);
 
-router.patch(
-  "/updatePassword",
-  authController.protect,
-  authController.updatePassword
-);
+router.use(authController.protect);
 
-router.get(
-  "/me",
-  authController.protect,
-  userController.getUserId,
-  userController.getUser
-);
+router.patch("/updatePassword", authController.updatePassword);
+
+router.get("/me", userController.getUserId, userController.getUser);
 
 router.patch(
   "/updateUser",
-  authController.protect,
   userController.uploadImage,
   userController.updateUser
 );
