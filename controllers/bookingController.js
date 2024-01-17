@@ -39,6 +39,9 @@ exports.getStaysAfterDate = catchAsync(async (req, res, next) => {
 });
 
 exports.getStaysTodayActivity = catchAsync(async (req, res, next) => {
+  const today = new Date();
+  today.setDate(today.getDate() - 1);
+
   const stays = await Booking.find({
     $or: [
       {
@@ -48,7 +51,7 @@ exports.getStaysTodayActivity = catchAsync(async (req, res, next) => {
             $expr: {
               $eq: [
                 { $dateToString: { format: "%Y-%m-%d", date: "$startDate" } },
-                { $dateToString: { format: "%Y-%m-%d", date: new Date() } },
+                { $dateToString: { format: "%Y-%m-%d", date: today } },
               ],
             },
           },
@@ -61,7 +64,7 @@ exports.getStaysTodayActivity = catchAsync(async (req, res, next) => {
             $expr: {
               $eq: [
                 { $dateToString: { format: "%Y-%m-%d", date: "$endDate" } },
-                { $dateToString: { format: "%Y-%m-%d", date: new Date() } },
+                { $dateToString: { format: "%Y-%m-%d", date: today } },
               ],
             },
           },
